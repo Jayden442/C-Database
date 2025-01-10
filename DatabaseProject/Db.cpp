@@ -18,3 +18,22 @@ bool Db::createTable(std::string name, int columns, std::vector<std::string> col
         return false;
     }
 }
+
+void Db::loadDb(){
+    ofstream of;
+    of.open("db.txt");
+    
+}
+
+void Db::saveDb(){
+    fstream fio;
+    fio.open("db.txt", ios::trunc | ios::out | ios::in);
+
+    for (auto it = table.begin(); it != table.end(); ++it){
+        for (auto it2 = it->second->getAllData().begin(); it2 != it->second->getAllData().begin(); ++it2){
+            fio << *it2;
+        }
+        fio << "Table end\0" << std::endl;
+    }
+    fio.close();
+}

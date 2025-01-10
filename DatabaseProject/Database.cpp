@@ -6,7 +6,7 @@ Database::Database(std::string name, int cols, std::vector<std::string> col_name
         Database::col_name.at(i) = col_name.at(i);
     }
     bTreeVect = std::vector<BTree<std::string, 4>>();
-    entryVect = std::vector<Entry*>();
+    entries = std::set<Entry*>();
     
     
 }
@@ -46,7 +46,7 @@ void Database::queryAdd(Entry* e){
 }
 }
 
-std::set<Entry*> Database::querySearch(int col, std::string name){
+std::set<Entry*> Database::querySearch(int col, const std::string &name) const{
     // return all data in which the specified column has a specific name
     auto it = mapA.at(col).find(name);
     if(it != mapA.at(col).end()){
@@ -60,7 +60,7 @@ std::set<Entry*> Database::querySearch(int col, std::string name){
     
 }
 
-std::set<Entry*> Database::queryDelete(int col, std::string name){
+std::set<Entry*> Database::queryDelete(int col, const std::string &name){
     std::set<Entry *> toBeDeleted = querySearch(col,name);
     for (Entry * e: toBeDeleted){
         for (int i = 0; i < mapA.size(); ++i){
@@ -71,10 +71,14 @@ std::set<Entry*> Database::queryDelete(int col, std::string name){
             }
         }
     }
+    for (int i = 0; i < toBeDeleted.size(); ++i){
+        auto it = next(toBeDeleted.begin(), i);
+        entries.erase(find(entries.begin(), entries.end(), *it));
+    }
     
 } 
 
-bool Database::queryUpdate(int col, std::string before, std::map<int, std::string> after){
+bool Database::queryUpdate(int col, const std::string &before, std::map<int, std::string> after){
     std::set<Entry*> toBeUpdated = querySearch(col,before);
     for (Entry * e: toBeUpdated){
         auto it = after.begin();
@@ -83,5 +87,13 @@ bool Database::queryUpdate(int col, std::string before, std::map<int, std::strin
         }
     }
 
+}
+
+std::set<Entry*> Database::getAllData() const{
+    return entries;
+}
+
+int Database::getSize() const{
+    return entries.size();
 }
 
