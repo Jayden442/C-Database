@@ -8,6 +8,8 @@ class Db{
         bool createTable(std::string name, int columns, std::vector<std::string> col_name);
         void loadDb();
         void saveDb();
+        std::vector<std::string> parseData(std::string);
+        int numColumns(std::string);
 
     private:
         std::map<std::string, Database*> table;

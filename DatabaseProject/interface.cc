@@ -4,7 +4,8 @@
 #include "Db.h"
 
 int main(){
-    Db db();
-    
+    Db db;
+    std::cout << "Creating file..." << endl;
+    db.loadDb();
     std::cout<<"Options \n" << "1. Create Table" << endl;
 }
